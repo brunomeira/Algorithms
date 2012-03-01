@@ -337,13 +337,78 @@ module DataStructure
 					if node.parent == node.parent.parent.left
 						y = node.parent.parent.right
 						if y.color == 1
-						
-						
+							node.parent.color = 0
+							y.color = 0
+							node.parent.parent.color = 1
+							node = node.parent.parent
+						else
+							if node == node.parent.right
+								node = node.parent
+								left_rotate(node)
+							end
+							node.parent.color = 0
+							node.parent.parent.color = 1
+							right_rotate(node.parent.parent)
 						end
 					else
+						y = node.parent.parent.left
+						if y.color == 1
+							node.parent.color = 0
+							y.color = 0
+							node.parent.parent.color = 1
+							node = node.parent.parent
+						else
+							if node == node.parent.left
+								node = node.parent
+								right_rotate(node)
+							end
+							node.parent.color = 0
+							node.parent.parent.color = 1
+							left_rotate(node.parent.parent)
+						end
 					end
 				end
 				@root.color = 0
+			end
+			
+			def left_rotate(node)
+				right = node.right
+				node.right = right.left
+				if right.left.nil? == false
+					right.left.parent = node
+				end
+				right.parent = node.parent
+				if node.parent.nil?
+					@root = right
+				else
+					if node == node.parent.left
+						node.parent.left = right
+					else
+						node.parent.right = right
+					end
+				end
+				right.left = node
+				node.parent = right
+			end
+			
+			def right_rotate(node)
+				left = node.left
+				node.left = left.right
+				if left.right.nil? == false
+					left.right.parent = node
+				end
+				left.parent = node.parent
+				if node.parent.nil?
+					@root = left
+				else
+					if node == node.parent.left
+						node.parent.left = left
+					else
+						node.parent.right = left
+					end
+				end
+				left.right = node
+				node.parent = left
 			end
 			
 			def root=(value)
@@ -468,47 +533,7 @@ module DataStructure
 			end
 		end
 		
-		private
-			def left_rotate(node)
-				right = node.right
-				node.right = right.left
-				if right.left.nil? == false
-					right.left.parent = node
-				end
-				right.parent = node.parent
-				if node.parent.nil?
-					@root = right
-				else
-					if node == node.parent.left
-						node.parent.left = right
-					else
-						node.parent.right = right
-					end
-				end
-				right.left = node
-				node.parent = right
-			end
-			
-			def right_rotate(node)
-				left = node.left
-				node.left = left.right
-				if left.right.nil? == false
-					left.right.parent = node
-				end
-				left.parent = node.parent
-				if node.parent.nil?
-					@root = left
-				else
-					if node == node.parent.left
-						node.parent.left = left
-					else
-						node.parent.right = left
-					end
-				end
-				left.right = node
-				node.parent = left
-			end
-		
+		private		
 			def transplant(old,new)
 				if old.parent.nil?
 					@root = new
